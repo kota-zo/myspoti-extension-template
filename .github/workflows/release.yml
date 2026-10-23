@@ -1,0 +1,36 @@
+name: release
+
+# Push a tag like v1.0.0: this builds extension.zip (the package Myspoti installs) and attaches
+# it to a GitHub release. The only credential is the workflow's own GITHUB_TOKEN.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The tag matches manifest.json
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          tag = os.environ["GITHUB_REF_NAME"].lstrip("v")
+          version = json.load(open("manifest.json", encoding="utf-8"))["version"]
+          if tag != version:
+              sys.exit(f"tag {tag} but manifest.json says version {version}: fix one of them")
+          PY
+
+      - name: Build extension.zip
+        run: python3 scripts/pack.py extension.zip
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" extension.zip \
+            --title "$GITHUB_REF_NAME" --generate-notes --verify-tag

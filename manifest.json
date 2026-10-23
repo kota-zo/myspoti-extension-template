@@ -1,0 +1,16 @@
+{
+  "id": "io.github.yourname.nowplaying",
+  "name": "Heard Lately",
+  "version": "1.0.0",
+  "versionCode": 1,
+  "author": "Your Name",
+  "description": "Adds a Home section with the last songs you played, kept on your phone. A template for your own extension.",
+  "homepage": "https://github.com/yourname/myspoti-extension-template",
+  "category": "stats",
+  "tags": ["history", "home"],
+  "actions": [
+    { "name": "playback.events", "why": "Notices each song you play" },
+    { "name": "storage", "why": "Keeps the last songs on this phone" },
+    { "name": "home.sections", "why": "Shows the last songs in a Home section" }
+  ]
+}
